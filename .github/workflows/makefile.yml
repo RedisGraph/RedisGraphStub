@@ -1,13 +1,42 @@
 name: Publish
 
+
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  build:
+  ubuntu-build:
+    strategy:
+      matrix:
+        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
+          # RHEL7
+          # RHEL8
+          # MacOS Catalina
     runs-on: ubuntu-latest
+    container: ${{ matrix.os }}
+    steps:
+    - name: apt update
+      run: apt-get update
+    - name: Install deps
+      run: apt-get install make gcc -y
+    - uses: actions/checkout@v3
+    - name: Make
+      run: make
+
+  amazno-linux-build:
+    runs-on: ubuntu-latest
+    container: "amazonlinux:2"
+    steps:
+    - name: Install deps
+      run: yum install make gcc tar gzip -y
+    - uses: actions/checkout@v3
+    - name: Make
+      run: make
+
+  mac-build:
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
     - name: Make

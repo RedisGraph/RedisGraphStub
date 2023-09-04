@@ -3,7 +3,7 @@ CFLAGS = -Wall -fPIC
 LDFLAGS = -shared
 
 SRC = module.c
-OUT = redisgraph.so
+OUT = RedisStackStub.so
 
 all: $(OUT)
 
