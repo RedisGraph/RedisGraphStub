@@ -11,9 +11,6 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
-          # RHEL7
-          # RHEL8
-          # MacOS Catalina
     runs-on: ubuntu-latest
     container: ${{ matrix.os }}
     steps:
@@ -25,9 +22,12 @@ jobs:
     - name: Make
       run: make
 
-  amazno-linux-build:
+  yum-flavors:
+    strategy:
+      matrix:
+        os: ["centos:centos7", "amazonlinux:2", "rockylinux:8"]
     runs-on: ubuntu-latest
-    container: "amazonlinux:2"
+    container: ${{ matrix.os }}
     steps:
     - name: Install deps
       run: yum install make gcc tar gzip -y
@@ -41,3 +41,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Make
       run: make
+
+# TODO: upload artifact to S3 under the following path
+# https://s3.amazonaws.com/redismodules/rediscompat/rediscompat.Linux-ubuntu-x86_64.2.12.8
+# https://s3.amazonaws.com/redismodules/rediscompat/rediscompat.OS-ARC-Version
