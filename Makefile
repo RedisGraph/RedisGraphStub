@@ -3,11 +3,12 @@ CFLAGS = -Wall -fPIC
 LDFLAGS = -shared
 
 SRC = module.c
-OUT = RedisStackStub.so
+OUT = ./bin/RedisStackStub.so
 
 all: $(OUT)
 
 $(OUT): $(SRC)
+		@mkdir -p ./bin
 		$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
 
 clean:

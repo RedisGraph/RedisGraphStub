@@ -1,6 +1,5 @@
 name: Publish
 
-
 on:
   push:
     branches: [ "main" ]
@@ -19,14 +18,38 @@ jobs:
     - name: Install deps
       run: apt-get install make gcc -y
     - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
     - name: Make
       run: make
+    - name: Rename
+      run: mv ./bin/RedisStackStub.so ${{format('{0}.{1}-{2}.{3}', './bin/RedisStackStub', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+    - name: upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: RedisStackStub
+        path: ./bin
+        retention-days: 1
+    - name: Upload S3
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+        aws_bucket: 'redismodules'
+        source_dir: ./bin
+        destination_dir: rediscompat
 
   yum-flavors:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: ["centos:centos7", "amazonlinux:2", "rockylinux:8"]
-    runs-on: ubuntu-latest
+        include:
+          - os: "centos:centos7"
+            osnick: "centos7"
+          - os: "amazonlinux:2"
+            osnick: "amazonlinux"
+          - os: "rockylinux:8"
+            osnick: "rockylinux"
     container: ${{ matrix.os }}
     steps:
     - name: Install deps
@@ -34,14 +57,45 @@ jobs:
     - uses: actions/checkout@v3
     - name: Make
       run: make
+    - name: Rename
+      run: mv ./bin/RedisStackStub.so ${{format('{0}.{1}-{2}.{3}', './bin/RedisStackStub', matrix.osnick, runner.arch, '1.0.0.so') }}
+    - name: upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: RedisStackStub
+        path: ./bin
+        retention-days: 1
+    - name: Upload S3
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+        aws_bucket: 'redismodules'
+        source_dir: ./bin
+        destination_dir: rediscompat
 
   mac-build:
     runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
     - name: Make
       run: make
+    - name: Rename
+      run: mv ./bin/RedisStackStub.so ${{format('{0}.{1}-{2}.{3}', './bin/RedisStackStub', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+    - name: upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: RedisStackStub
+        path: ./bin
+        retention-days: 1
+    - name: Upload S3
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+        aws_bucket: 'redismodules'
+        source_dir: ./bin
+        destination_dir: rediscompat
 
-# TODO: upload artifact to S3 under the following path
-# https://s3.amazonaws.com/redismodules/rediscompat/rediscompat.Linux-ubuntu-x86_64.2.12.8
-# https://s3.amazonaws.com/redismodules/rediscompat/rediscompat.OS-ARC-Version
