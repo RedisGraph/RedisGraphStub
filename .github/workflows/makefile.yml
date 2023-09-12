@@ -23,8 +23,8 @@ jobs:
     - name: Make
       run: make
     - name: Rename
-      run: mv ./bin/RedisStackStub.so ${{format('{0}.{1}-{2}.{3}', './bin/RedisStackStub', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
-    - name: upload artifact
+      run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+    - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: RedisStackStub
@@ -58,11 +58,11 @@ jobs:
     - name: Make
       run: make
     - name: Rename
-      run: mv ./bin/RedisStackStub.so ${{format('{0}.{1}-{2}.{3}', './bin/RedisStackStub', matrix.osnick, runner.arch, '1.0.0.so') }}
+      run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', matrix.osnick, runner.arch, '1.0.0.so') }}
     - name: upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: RedisStackStub
+        name: Upload artifact
         path: ./bin
         retention-days: 1
     - name: Upload S3
@@ -83,11 +83,11 @@ jobs:
     - name: Make
       run: make
     - name: Rename
-      run: mv ./bin/RedisStackStub.so ${{format('{0}.{1}-{2}.{3}', './bin/RedisStackStub', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+      run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: RedisStackStub
+        name: Upload artifact
         path: ./bin
         retention-days: 1
     - name: Upload S3
