@@ -91,7 +91,7 @@ int RedisModule_OnLoad
 	RedisModuleString **argv,
 	int argc
 ) {
-	if(RedisModule_Init(ctx, "RedisStackCompat", 1, REDISMODULE_APIVER_1)
+	if(RedisModule_Init(ctx, "RedisCompat", 1, REDISMODULE_APIVER_1)
 			== REDISMODULE_ERR) {
 		return REDISMODULE_ERR;
 	}
