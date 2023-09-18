@@ -98,7 +98,7 @@ jobs:
           - os: "rockylinux:8"
           - osnick: "rockylinux"
         runners: ["ubuntu-latest", "${{ needs.start-runner.outputs.label }}"]
-    runs-on: ubuntu-latest
+    runs-on: : ${{ matrix.runners }}
     container: ${{ matrix.os }}
     steps:
     - name: Install deps
