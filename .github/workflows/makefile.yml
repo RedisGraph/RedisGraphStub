@@ -44,7 +44,7 @@ jobs:
     - name: apt update
       run: apt-get update
     - name: Install deps
-      run: apt-get install make gcc -y
+      run: apt-get install make gcc curl -y
     - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
       id: system-info
@@ -109,7 +109,7 @@ jobs:
     container: ${{ matrix.os }}
     steps:
     - name: Install deps
-      run: yum install make gcc tar gzip -y
+      run: yum install make gcc tar gzip curl -y
     - uses: actions/checkout@v3
     - name: setup python
       uses: actions/setup-python@v4
