@@ -49,7 +49,7 @@ jobs:
     - name: Make
       run: make
     - name: test
-      run: RLTest --module bin/rediscompat.so
+      run: poetry run RLTest --module bin/rediscompat.so
 
   yum-flavors:
     strategy:
@@ -95,7 +95,7 @@ jobs:
     - name: Make
       run: make
     - name: test
-      run: RLTest --module bin/rediscompat.so
+      run: poetry run RLTest --module bin/rediscompat.so
 
   mac-build:
     strategy:
@@ -133,5 +133,5 @@ jobs:
     - name: Make
       run: make
     - name: test
-      run: RLTest --module bin/rediscompat.so
+      run: poetry run RLTest --module bin/rediscompat.so
 

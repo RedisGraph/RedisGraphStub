@@ -75,7 +75,7 @@ jobs:
     - name: Make
       run: make
     - name: test
-      run: RLTest --module bin/rediscompat.so
+      run: poetry run RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: Upload artifact
@@ -138,7 +138,7 @@ jobs:
     - name: Make
       run: make
     - name: test
-      run: RLTest --module bin/rediscompat.so
+      run: poetry run RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', matrix.osnick, runner.arch, '1.0.0.so') }}
     - name: upload artifact
@@ -192,7 +192,7 @@ jobs:
     - name: Make
       run: make
     - name: test
-      run: RLTest --module bin/rediscompat.so
+      run: poetry run RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: upload artifact
