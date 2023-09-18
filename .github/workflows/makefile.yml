@@ -75,7 +75,10 @@ jobs:
         destination_dir: rediscompat
 
   mac-build:
-    runs-on: macos-12
+    strategy:
+      matrix:
+        runners: [macos-12, runner-1]
+    runs-on: ${{ matrix.runners }}
     steps:
     - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
@@ -98,4 +101,3 @@ jobs:
         aws_bucket: 'redismodules'
         source_dir: ./bin
         destination_dir: rediscompat
-
