@@ -1,0 +1,116 @@
+name: Tests
+
+on:
+    pull_request:
+        branches:
+        - main
+
+jobs:
+
+  ubuntu-build:
+    strategy:
+      matrix:
+        runners: ["ubuntu-latest"]
+        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
+    runs-on: ${{ matrix.runners }}
+    container: ${{ matrix.os }}
+    steps:
+    - name: apt update
+      run: apt-get update
+    - name: Install deps
+      run: apt-get install make gcc -y
+    - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: clone redis
+      uses: actions/checkout@v3
+        # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      with:
+        fetch-depth: ''
+        repository: 'redis/redis'
+        ref: 7.2
+        path: redis
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make BUILD_TLS=yes -j `nproc` install
+    - name: Make
+      run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
+
+  yum-flavors:
+    strategy:
+      matrix:
+        include:
+          - os: "centos:centos7"
+          - osnick: "centos7"
+          - os: "amazonlinux:2"
+          - osnick: "amazonlinux"
+          - os: "rockylinux:8"
+          - osnick: "rockylinux"
+        runners: ["ubuntu-latest"]
+    runs-on: $${{ matrix.runners }}
+    container: ${{ matrix.os }}
+    steps:
+    - name: Install deps
+      run: yum install make gcc tar gzip -y
+    - uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: clone redis
+      uses: actions/checkout@v3
+        # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      with:
+        fetch-depth: ''
+        repository: 'redis/redis'
+        ref: 7.2
+        path: redis
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make BUILD_TLS=yes -j `nproc` install
+    - name: Make
+      run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
+
+  mac-build:
+    strategy:
+      matrix:
+        runners: [macos-12]
+    runs-on: ${{ matrix.runners }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: clone redis
+      uses: actions/checkout@v3
+        # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      with:
+        fetch-depth: ''
+        repository: 'redis/redis'
+        ref: 7.2
+        path: redis
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make BUILD_TLS=yes -j `nproc` install
+    - name: Make
+      run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
+
