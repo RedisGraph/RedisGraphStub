@@ -56,11 +56,11 @@ jobs:
       matrix:
         include:
           - os: "centos:centos7"
-          - osnick: "centos7"
+            osnick: "centos7"
           - os: "amazonlinux:2"
-          - osnick: "amazonlinux"
+            osnick: "amazonlinux"
           - os: "rockylinux:8"
-          - osnick: "rockylinux"
+            osnick: "rockylinux"
         runners: ["ubuntu-latest"]
     runs-on: $${{ matrix.runners }}
     container: ${{ matrix.os }}
