@@ -60,8 +60,15 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
+    - name: Setup Poetry
+      uses: snok/install-poetry@v1
+      with:
+          version: latest
+          virtualenvs-in-project: true
+          virtualenvs-create: true
+          installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: poetry install -q
     - name: Install Redis Server
       working-directory: redis
       run: make BUILD_TLS=yes -j `nproc` install
@@ -98,7 +105,7 @@ jobs:
           - os: "rockylinux:8"
           - osnick: "rockylinux"
         runners: ["ubuntu-latest", "${{ needs.start-runner.outputs.label }}"]
-    runs-on: : ${{ matrix.runners }}
+    runs-on: ${{ matrix.runners }}
     container: ${{ matrix.os }}
     steps:
     - name: Install deps
@@ -116,8 +123,15 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
+    - name: Setup Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-in-project: true
+        virtualenvs-create: true
+        installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: poetry install -q
     - name: Install Redis Server
       working-directory: redis
       run: make BUILD_TLS=yes -j `nproc` install
@@ -163,8 +177,15 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
+    - name: Setup Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-in-project: true
+        virtualenvs-create: true
+        installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: poetry install -q
     - name: Install Redis Server
       working-directory: redis
       run: make BUILD_TLS=yes -j `nproc` install
