@@ -6,11 +6,39 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  start-runner:
+    name: Start self-hosted EC2 runner
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Start EC2 runner
+        id: start-ec2-runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: start
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          # Ubuntu 22.04 region AMI for ARM
+          ec2-image-id: ami-062b37d89f25c958f
+          ec2-instance-type: t4g.medium
+          subnet-id: ${{ secrets.AWS_EC2_SUBNET_ID }}
+          security-group-id: ${{ secrets.AWS_EC2_SG_ID }}
+
   ubuntu-build:
+    needs: start-runner
     strategy:
       matrix:
+        runners: ["ubuntu-latest", "${{ needs.start-runner.outputs.label }}"]
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runners }}
     container: ${{ matrix.os }}
     steps:
     - name: apt update
@@ -20,8 +48,27 @@ jobs:
     - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
       id: system-info
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: clone redis
+      uses: actions/checkout@v3
+        # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      with:
+        fetch-depth: ''
+        repository: 'redis/redis'
+        ref: 7.2
+        path: redis
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make BUILD_TLS=yes -j `nproc` install
     - name: Make
       run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: Upload artifact
@@ -40,23 +87,44 @@ jobs:
         destination_dir: rediscompat
 
   yum-flavors:
-    runs-on: ubuntu-latest
+    needs: start-runner
     strategy:
       matrix:
         include:
           - os: "centos:centos7"
-            osnick: "centos7"
+          - osnick: "centos7"
           - os: "amazonlinux:2"
-            osnick: "amazonlinux"
+          - osnick: "amazonlinux"
           - os: "rockylinux:8"
-            osnick: "rockylinux"
+          - osnick: "rockylinux"
+        runners: ["ubuntu-latest", "${{ needs.start-runner.outputs.label }}"]
+    runs-on: ubuntu-latest
     container: ${{ matrix.os }}
     steps:
     - name: Install deps
       run: yum install make gcc tar gzip -y
     - uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: clone redis
+      uses: actions/checkout@v3
+        # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      with:
+        fetch-depth: ''
+        repository: 'redis/redis'
+        ref: 7.2
+        path: redis
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make BUILD_TLS=yes -j `nproc` install
     - name: Make
       run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', matrix.osnick, runner.arch, '1.0.0.so') }}
     - name: upload artifact
@@ -83,8 +151,27 @@ jobs:
     - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
       id: system-info
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: clone redis
+      uses: actions/checkout@v3
+        # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      with:
+        fetch-depth: ''
+        repository: 'redis/redis'
+        ref: 7.2
+        path: redis
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make BUILD_TLS=yes -j `nproc` install
     - name: Make
       run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: upload artifact
@@ -101,3 +188,27 @@ jobs:
         aws_bucket: 'redismodules'
         source_dir: ./bin
         destination_dir: rediscompat
+
+
+  stop-runner:
+    name: Stop self-hosted EC2 runner
+    needs:
+      - start-runner # required to get output from the start-runner job
+      - ubuntu-build # required to wait when the main job is done
+      - yum-flavors # required to wait when the main job is done
+    runs-on: ubuntu-latest
+    if: ${{ always() }} # required to stop the runner even if the error happened in the previous jobs
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Stop EC2 runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: stop
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          label: ${{ needs.start-runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
