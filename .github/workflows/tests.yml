@@ -19,7 +19,7 @@ jobs:
     - name: apt update
       run: apt-get update
     - name: Install deps
-      run: apt install make gcc build-essential python3 curl -y
+      run: apt install make gcc build-essential python3 python3-pip curl -y
     - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
       id: system-info
@@ -35,22 +35,22 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
-    - name: Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 1.1.15
-        virtualenvs-in-project: true
-        virtualenvs-create: true
-        installer-parallel: true
+    # - name: Setup Poetry
+    #   uses: snok/install-poetry@v1
+    #   with:
+    #     version: 1.1.15
+    #     virtualenvs-in-project: true
+    #     virtualenvs-create: true
+    #     installer-parallel: true
     - name: Install Python dependencies
-      run: poetry install -q
+      run: pip install -r requirements.txt
     - name: Install Redis Server
       working-directory: redis
       run: make -j `nproc` install
     - name: Make
       run: make
     - name: test
-      run: poetry run RLTest --module bin/rediscompat.so
+      run: RLTest --module bin/rediscompat.so
 
   yum-flavors:
     strategy:
@@ -78,22 +78,22 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
-    - name: Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-          version: 1.1.15
-          virtualenvs-in-project: true
-          virtualenvs-create: true
-          installer-parallel: true
+    # - name: Setup Poetry
+    #   uses: snok/install-poetry@v1
+    #   with:
+    #       version: 1.1.15
+    #       virtualenvs-in-project: true
+    #       virtualenvs-create: true
+    #       installer-parallel: true
     - name: Install Python dependencies
-      run: poetry install -q
+      run: pip install -r requirements.txt
     - name: Install Redis Server
       working-directory: redis
       run: make -j `nproc` install
     - name: Make
       run: make
     - name: test
-      run: poetry run RLTest --module bin/rediscompat.so
+      run: RLTest --module bin/rediscompat.so
 
   mac-build:
     strategy:
@@ -116,20 +116,20 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
-    - name: Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-in-project: true
-        virtualenvs-create: true
-        installer-parallel: true
+    # - name: Setup Poetry
+    #   uses: snok/install-poetry@v1
+    #   with:
+    #     version: latest
+    #     virtualenvs-in-project: true
+    #     virtualenvs-create: true
+    #     installer-parallel: true
     - name: Install Python dependencies
-      run: poetry install -q
+      run: pip install -r requirements.txt
     - name: Install Redis Server
       working-directory: redis
       run: make BUILD_TLS=yes -j `nproc` install
     - name: Make
       run: make
     - name: test
-      run: poetry run RLTest --module bin/rediscompat.so
+      run: RLTest --module bin/rediscompat.so
 
