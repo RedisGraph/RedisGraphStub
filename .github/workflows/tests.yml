@@ -46,7 +46,7 @@ jobs:
       run: poetry install -q
     - name: Install Redis Server
       working-directory: redis
-      run: make BUILD_TLS=yes -j `nproc` install
+      run: make -j `nproc` install
     - name: Make
       run: make
     - name: test
