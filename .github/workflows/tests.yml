@@ -61,6 +61,7 @@ jobs:
     runs-on: ${{ matrix.runners }}
     container: ${{ matrix.os }}
     steps:
+    - uses: actions/checkout@v3
     - name: Install deps
       run: yum install make gcc tar gzip curl python3 -y
     - name: clone redis
@@ -72,7 +73,7 @@ jobs:
         ref: 7.2
         path: redis
     - name: Install Python dependencies
-      run: python3 -m pip install --user -r requirments.txt
+      run: python3 -m pip install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
       run: make -j `nproc` install
