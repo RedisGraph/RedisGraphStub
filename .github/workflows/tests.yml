@@ -9,6 +9,7 @@ jobs:
 
   ubuntu-build:
     strategy:
+      fail-fast: false
       matrix:
         runners: ["ubuntu-latest"]
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
@@ -53,6 +54,7 @@ jobs:
 
   yum-flavors:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: "centos:centos7"
