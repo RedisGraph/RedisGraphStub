@@ -43,7 +43,7 @@ jobs:
     #     virtualenvs-create: true
     #     installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: pip install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
       run: make -j `nproc` install
@@ -86,7 +86,7 @@ jobs:
     #       virtualenvs-create: true
     #       installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: pip install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
       run: make -j `nproc` install
@@ -124,7 +124,7 @@ jobs:
     #     virtualenvs-create: true
     #     installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: pip install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
       run: make BUILD_TLS=yes -j `nproc` install
