@@ -51,7 +51,7 @@ jobs:
     - name: setup python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.10'
     - name: clone redis
       uses: actions/checkout@v3
         # Number of commits to fetch. 0 indicates all history for all branches and tags.
@@ -114,7 +114,7 @@ jobs:
     - name: setup python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.10'
     - name: clone redis
       uses: actions/checkout@v3
         # Number of commits to fetch. 0 indicates all history for all branches and tags.
@@ -168,7 +168,7 @@ jobs:
     - name: setup python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.10'
     - name: clone redis
       uses: actions/checkout@v3
         # Number of commits to fetch. 0 indicates all history for all branches and tags.
