@@ -35,15 +35,8 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
-    # - name: Setup Poetry
-    #   uses: snok/install-poetry@v1
-    #   with:
-    #     version: 1.1.15
-    #     virtualenvs-in-project: true
-    #     virtualenvs-create: true
-    #     installer-parallel: true
     - name: Install Python dependencies
-      run: pip install -r requirments.txt
+      run: pip3 install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
       run: make -j `nproc` install
@@ -78,13 +71,6 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
-    # - name: Setup Poetry
-    #   uses: snok/install-poetry@v1
-    #   with:
-    #       version: 1.1.15
-    #       virtualenvs-in-project: true
-    #       virtualenvs-create: true
-    #       installer-parallel: true
     - name: Install Python dependencies
       run: pip install -r requirments.txt
     - name: Install Redis Server
@@ -116,13 +102,6 @@ jobs:
         repository: 'redis/redis'
         ref: 7.2
         path: redis
-    # - name: Setup Poetry
-    #   uses: snok/install-poetry@v1
-    #   with:
-    #     version: latest
-    #     virtualenvs-in-project: true
-    #     virtualenvs-create: true
-    #     installer-parallel: true
     - name: Install Python dependencies
       run: pip install -r requirments.txt
     - name: Install Redis Server
