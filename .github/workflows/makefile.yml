@@ -65,22 +65,22 @@ jobs:
       run: make
     - name: test
       run: poetry run RLTest --module bin/rediscompat.so
-    - name: Rename
-      run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: RedisStackStub
-        path: ./bin
-        retention-days: 1
-    - name: Upload S3
-      uses: shallwefootball/s3-upload-action@master
-      with:
-        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
-        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
-        aws_bucket: 'redismodules'
-        source_dir: ./bin
-        destination_dir: rediscompat
+    # - name: Rename
+    #   run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+    # - name: Upload artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: RedisStackStub
+    #     path: ./bin
+    #     retention-days: 1
+    # - name: Upload S3
+    #   uses: shallwefootball/s3-upload-action@master
+    #   with:
+    #     aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+    #     aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+    #     aws_bucket: 'redismodules'
+    #     source_dir: ./bin
+    #     destination_dir: rediscompat
 
   yum-flavors:
     needs: start-runner
@@ -115,22 +115,22 @@ jobs:
       run: make
     - name: test
       run: RLTest --module bin/rediscompat.so
-    - name: Rename
-      run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', matrix.osnick, runner.arch, '1.0.0.so') }}
-    - name: upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: Upload artifact
-        path: ./bin
-        retention-days: 1
-    - name: Upload S3
-      uses: shallwefootball/s3-upload-action@master
-      with:
-        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
-        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
-        aws_bucket: 'redismodules'
-        source_dir: ./bin
-        destination_dir: rediscompat
+    # - name: Rename
+    #   run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', matrix.osnick, runner.arch, '1.0.0.so') }}
+    # - name: upload artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: Upload artifact
+    #     path: ./bin
+    #     retention-days: 1
+    # - name: Upload S3
+    #   uses: shallwefootball/s3-upload-action@master
+    #   with:
+    #     aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+    #     aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+    #     aws_bucket: 'redismodules'
+    #     source_dir: ./bin
+    #     destination_dir: rediscompat
 
   mac-build:
     strategy:
@@ -160,22 +160,22 @@ jobs:
       run: make
     - name: test
       run: RLTest --module bin/rediscompat.so
-    - name: Rename
-      run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
-    - name: upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: Upload artifact
-        path: ./bin
-        retention-days: 1
-    - name: Upload S3
-      uses: shallwefootball/s3-upload-action@master
-      with:
-        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
-        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
-        aws_bucket: 'redismodules'
-        source_dir: ./bin
-        destination_dir: rediscompat
+    # - name: Rename
+    #   run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+    # - name: upload artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: Upload artifact
+    #     path: ./bin
+    #     retention-days: 1
+    # - name: Upload S3
+    #   uses: shallwefootball/s3-upload-action@master
+    #   with:
+    #     aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+    #     aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+    #     aws_bucket: 'redismodules'
+    #     source_dir: ./bin
+    #     destination_dir: rediscompat
 
 
   stop-runner:
