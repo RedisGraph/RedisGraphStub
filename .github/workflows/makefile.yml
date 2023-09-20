@@ -5,8 +5,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-jobs:
+env:
+  REDIS_REF: 7.2
 
+jobs:
   start-runner:
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
@@ -44,31 +46,18 @@ jobs:
     - name: apt update
       run: apt update
     - name: Install deps
-      run: apt install make gcc build-essential -y
+      run: apt install make gcc build-essential python3 python3-pip curl -y
     - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
       id: system-info
-    - name: setup python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-          version: latest
-          virtualenvs-in-project: true
-          virtualenvs-create: true
-          installer-parallel: true
-    - name: Install Python dependencies
-      run: poetry install -q
     - name: clone redis
       uses: actions/checkout@v3
-        # Number of commits to fetch. 0 indicates all history for all branches and tags.
       with:
-        fetch-depth: ''
         repository: 'redis/redis'
-        ref: 7.2
+        ref: ${{ env.REDIS_REF }}
         path: redis
+    - name: Install Python dependencies
+      run: pip3 install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
       run: make BUILD_TLS=yes -j `nproc` install
@@ -109,36 +98,23 @@ jobs:
     container: ${{ matrix.os }}
     steps:
     - name: Install deps
-      run: yum install make gcc tar gzip curl jemalloc-devel -y
+      run: yum install make gcc tar gzip curl python3 python3-devel -y
     - uses: actions/checkout@v3
-    - name: setup python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
     - name: clone redis
       uses: actions/checkout@v3
-        # Number of commits to fetch. 0 indicates all history for all branches and tags.
       with:
-        fetch-depth: ''
         repository: 'redis/redis'
-        ref: 7.2
+        ref: ${{ env.REDIS_REF }}
         path: redis
-    - name: Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-in-project: true
-        virtualenvs-create: true
-        installer-parallel: true
     - name: Install Python dependencies
-      run: poetry install -q
+      run: python3 -m pip install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
-      run: make BUILD_TLS=yes -j `nproc` install
+      run: make -j `nproc` install
     - name: Make
       run: make
     - name: test
-      run: poetry run RLTest --module bin/rediscompat.so
+      run: RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', matrix.osnick, runner.arch, '1.0.0.so') }}
     - name: upload artifact
@@ -171,28 +147,19 @@ jobs:
         python-version: '3.10'
     - name: clone redis
       uses: actions/checkout@v3
-        # Number of commits to fetch. 0 indicates all history for all branches and tags.
       with:
-        fetch-depth: ''
         repository: 'redis/redis'
-        ref: 7.2
+        ref: ${{ env.REDIS_REF }}
         path: redis
-    - name: Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-in-project: true
-        virtualenvs-create: true
-        installer-parallel: true
     - name: Install Python dependencies
-      run: poetry install -q
+      run: pip install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
-      run: make BUILD_TLS=yes -j `nproc` install
+      run: make -j `nproc` install
     - name: Make
       run: make
     - name: test
-      run: poetry run RLTest --module bin/rediscompat.so
+      run: RLTest --module bin/rediscompat.so
     - name: Rename
       run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: upload artifact
