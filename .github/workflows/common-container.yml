@@ -1,0 +1,81 @@
+name: Common flow (container)
+
+on:
+  workflow_call:
+    inputs:
+      runner:
+        default: 'ubuntu-latest'
+        type: string
+      container:
+        required: true
+        type: string
+      os-nickname:
+        type: string
+      REDIS_REF:
+        type: string
+        default: '7.2'
+      deploy:
+        type: boolean
+        default: false
+      dependencies_command:
+        type: string
+      python-setup:
+        type: string
+
+
+jobs:
+  common-build:
+    runs-on: ${{ inputs.runner }}
+    container: ${{ inputs.container }}
+    steps:
+    - name: Install Deps
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        ${{ inputs.dependencies_command }}
+    - uses: actions/checkout@v3
+    - uses: kenchan0130/actions-system-info@master
+      id: system-info
+    - name: Clone Redis
+      uses: actions/checkout@v3
+      with:
+        repository: 'redis/redis'
+        ref: ${{ inputs.REDIS_REF }}
+        path: redis
+    - name: Install Python
+      if: ${{ inputs.python-setup }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-setup }}
+    - name: Install Python Dependencies
+      run: pip3 install -r requirments.txt
+    - name: Install Redis Server
+      working-directory: redis
+      run: make -j `nproc` install
+    - name: Make
+      run: make
+    - name: test
+      run: RLTest --module bin/rediscompat.so
+    - name: Rename
+      if: ${{ inputs.deploy }}
+      run: mv ./bin/rediscompat.so
+        ${{ format('{0}.{1}-{2}.{3}.so',
+          './bin/rediscompat',
+          inputs.os-nickname || format('{0}-{1}', steps.system-info.outputs.name, steps.system-info.outputs.release),
+          runner.arch,
+          '1.0.0') }}
+    - name: Upload artifact
+      if: ${{ inputs.deploy }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: RedisStackStub
+        path: ./bin
+        retention-days: 1
+    - name: Upload S3
+      if: ${{ inputs.deploy }}
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+        aws_bucket: 'redismodules'
+        source_dir: ./bin
+        destination_dir: rediscompat

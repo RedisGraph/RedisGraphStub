@@ -1,14 +1,13 @@
-name: Publish
+name: Tests
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
-  workflow_dispatch:
 
 jobs:
-  run-deploy:
+  run-tests:
     uses: ./.github/workflows/common-flow.yml
     secrets: inherit
     with:
-      deploy: true
-      fast-fail: true
+      deploy: false
+      fast-fail: false
