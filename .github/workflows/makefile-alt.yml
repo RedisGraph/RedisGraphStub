@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
+    secrets: inherit
     uses: ./.github/workflows/common-container.yml
     with:
       container: ${{ matrix.os }}
@@ -26,6 +27,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
+    secrets: inherit
     uses: ./.github/workflows/self-hosted-arm.yml
     with:
       container: ${{ matrix.os }}
@@ -43,6 +45,7 @@ jobs:
             osnick: "amazonlinux"
           - os: "rockylinux:8"
             osnick: "rockylinux"
+    secrets: inherit
     uses: ./.github/workflows/common-container.yml
     with:
       container: ${{ matrix.os }}
@@ -59,6 +62,7 @@ jobs:
             osnick: "amazonlinux"
           - os: "rockylinux:8"
             osnick: "rockylinux"
+    secrets: inherit
     uses: ./.github/workflows/self-hosted-arm.yml
     with:
       container: ${{ matrix.os }}
@@ -69,6 +73,7 @@ jobs:
     strategy:
       matrix:
         runners: [macos-12]
+    secrets: inherit
     uses: ./.github/workflows/common-runner.yml
     with:
       runner: ${{ matrix.runners }}

@@ -47,6 +47,7 @@ jobs:
   run:
     needs: start-runner # required to start the main job when the runner is ready
     uses: ./.github/workflows/common-container.yml
+    secrets: inherit
     with:
       REDIS_REF: ${{ inputs.REDIS_REF }}
       dependencies_command: ${{ inputs.dependencies_command }}
