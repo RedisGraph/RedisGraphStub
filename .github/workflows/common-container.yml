@@ -28,7 +28,6 @@ jobs:
     steps:
     - name: Install Deps
       run: |
-        echo '${{ inputs.dependencies_command }}'
         export DEBIAN_FRONTEND=noninteractive
         ${{ inputs.dependencies_command }}
     - uses: actions/checkout@v3
