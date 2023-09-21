@@ -4,103 +4,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  REDIS_REF: 7.2
-
 jobs:
-  ubuntu-build:
-    strategy:
-      fail-fast: false
-      matrix:
-        runners: ["ubuntu-latest"]
-        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
-    runs-on: ${{ matrix.runners }}
-    container: ${{ matrix.os }}
-    steps:
-    - name: apt update
-      run: apt update
-    - name: Install deps
-      run: apt install make gcc build-essential python3 python3-pip curl -y
-    - uses: actions/checkout@v3
-    - uses: kenchan0130/actions-system-info@master
-      id: system-info
-    - name: clone redis
-      uses: actions/checkout@v3
-      with:
-        repository: 'redis/redis'
-        ref: ${{ env.REDIS_REF }}
-        path: redis
-    - name: Install Python dependencies
-      run: pip3 install -r requirments.txt
-    - name: Install Redis Server
-      working-directory: redis
-      run: make -j `nproc` install
-    - name: Make
-      run: make
-    - name: test
-      run: RLTest --module bin/rediscompat.so
-
-  yum-flavors:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: "centos:centos7"
-            osnick: "centos7"
-          - os: "amazonlinux:2"
-            osnick: "amazonlinux"
-          - os: "rockylinux:8"
-            osnick: "rockylinux"
-        runners: ["ubuntu-latest"]
-        os: ["centos:centos7", "amazonlinux:2", "rockylinux:8"]
-    runs-on: ${{ matrix.runners }}
-    container: ${{ matrix.os }}
-    steps:
-    - name: Install deps
-      run: yum install make gcc tar gzip curl python3 python3-devel -y
-    - uses: actions/checkout@v3
-    - name: clone redis
-      uses: actions/checkout@v3
-      with:
-        repository: 'redis/redis'
-        ref: ${{ env.REDIS_REF }}
-        path: redis
-    - name: Install Python dependencies
-      run: python3 -m pip install -r requirments.txt
-    - name: Install Redis Server
-      working-directory: redis
-      run: make -j `nproc` install
-    - name: Make
-      run: make
-    - name: test
-      run: RLTest --module bin/rediscompat.so
-
-  mac-build:
-    strategy:
-      fail-fast: false
-      matrix:
-        runners: [macos-12]
-    runs-on: ${{ matrix.runners }}
-    steps:
-    - uses: actions/checkout@v3
-    - uses: kenchan0130/actions-system-info@master
-      id: system-info
-    - name: setup python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: clone redis
-      uses: actions/checkout@v3
-      with:
-        repository: 'redis/redis'
-        ref: ${{ env.REDIS_REF }}
-        path: redis
-    - name: Install Python dependencies
-      run: pip install -r requirments.txt
-    - name: Install Redis Server
-      working-directory: redis
-      run: make -j `nproc` install
-    - name: Make
-      run: make
-    - name: test
-      run: RLTest --module bin/rediscompat.so
+  run-tests:
+    uses: ./.github/workflows/common-flow.yml
+    secrets: inherit
+    with:
+      deploy: false
+      fast-fail: false
