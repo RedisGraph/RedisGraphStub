@@ -1,6 +1,8 @@
 name: Publish
 
 on:
+  pull_request: # TEMP
+    branches: [ "main" ]
   push:
     branches: [ "main" ]
   workflow_dispatch:
