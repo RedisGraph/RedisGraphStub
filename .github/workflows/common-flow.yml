@@ -78,9 +78,10 @@ jobs:
     strategy:
       fail-fast: ${{ inputs.fast-fail }}
       matrix:
-        runners: [macos-12, ARM64]
+        runners: [macos-12]
     secrets: inherit
     uses: ./.github/workflows/common-runner.yml
     with:
       runner: ${{ matrix.runners }}
+      python-setup: '3.10'
       deploy: ${{ inputs.deploy }}
