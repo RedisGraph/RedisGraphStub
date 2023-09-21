@@ -54,10 +54,11 @@ jobs:
     - name: Rename
       # if: ${{ inputs.deploy }}
       run: mv ./bin/rediscompat.so
-        ${{ format('{0}.{1}-{2}.{3}', './bin/rediscompat',
-            inputs.os-nickname || format('{0}{1}', steps.system-info.outputs.name, steps.system-info.outputs.release),
+        ${{ format('{0}.{1}-{2}.{3}.so',
+            './bin/rediscompat',
+            inputs.os-nickname || format('{0}-{1}', steps.system-info.outputs.name, steps.system-info.outputs.release),
             runner.arch,
-            '1.0.0.so') }}
+            '1.0.0') }}
     - name: Upload artifact
       if: ${{ inputs.deploy }}
       uses: actions/upload-artifact@v3
