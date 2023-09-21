@@ -13,7 +13,6 @@ on:
         default: false
       dependencies_command:
         type: string
-        required: true
 
 env:
   AWS_IMAGE_ID: ami-062b37d89f25c958f  # Ubuntu 22.04 region AMI for ARM
