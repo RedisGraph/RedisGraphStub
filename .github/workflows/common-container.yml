@@ -28,35 +28,40 @@ jobs:
     runs-on: ${{ inputs.runner }}
     container: ${{ inputs.container }}
     steps:
-    - name: Install Deps
-      run: |
-        export DEBIAN_FRONTEND=noninteractive
-        ${{ inputs.dependencies_command }}
-    - uses: actions/checkout@v3
+    # - name: Install Deps
+    #   run: |
+    #     export DEBIAN_FRONTEND=noninteractive
+    #     ${{ inputs.dependencies_command }}
+    # - uses: actions/checkout@v3
     - uses: kenchan0130/actions-system-info@master
       id: system-info
-    - name: Clone Redis
-      uses: actions/checkout@v3
-      with:
-        repository: 'redis/redis'
-        ref: ${{ inputs.REDIS_REF }}
-        path: redis
-    - name: Install Python
-      if: ${{ inputs.python-setup }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-setup }}
-    - name: Install Python Dependencies
-      run: pip3 install -r requirments.txt
-    - name: Install Redis Server
-      working-directory: redis
-      run: make -j `nproc` install
-    - name: Make
-      run: make
-    - name: test
-      run: RLTest --module bin/rediscompat.so
+    # - name: Clone Redis
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: 'redis/redis'
+    #     ref: ${{ inputs.REDIS_REF }}
+    #     path: redis
+    # - name: Install Python
+    #   if: ${{ inputs.python-setup }}
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: ${{ inputs.python-setup }}
+    # - name: Install Python Dependencies
+    #   run: pip3 install -r requirments.txt
+    # - name: Install Redis Server
+    #   working-directory: redis
+    #   run: make -j `nproc` install
+    # - name: Make
+    #   run: make
+    # - name: test
+    #   run: RLTest --module bin/rediscompat.so
+    - name: TEMP - Print system info
+      run: |
+        echo ${{ steps.system-info.outputs.name }}
+        echo ${{ steps.system-info.outputs.release }}
+        echo ${{ steps.system-info.outputs.platform }}
     - name: Rename
-      # if: ${{ inputs.deploy }}
+      if: ${{ inputs.deploy }}
       run: mv ./bin/rediscompat.so
         ${{ format('{0}.{1}-{2}.{3}', './bin/rediscompat', inputs.os-nickname || steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: Upload artifact
