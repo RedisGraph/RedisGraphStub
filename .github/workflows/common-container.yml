@@ -55,7 +55,13 @@ jobs:
       run: make
     - name: test
       run: RLTest --module bin/rediscompat.so
+    - name: TEMP - ls
+      run: |
+        ls -la
+        ls -la ./bin
+        ls -la bin
     - name: Rename
+      if: ${{ inputs.deploy }}
       run: mv ./bin/rediscompat.so \
         ${{ format('{0}.{1}-{2}.{3}', './bin/rediscompat', inputs.os-nickname || steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
     - name: Upload artifact

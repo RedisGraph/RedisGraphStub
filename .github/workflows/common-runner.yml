@@ -51,6 +51,11 @@ jobs:
       run: make
     - name: test
       run: RLTest --module bin/rediscompat.so
+    - name: TEMP - ls
+      run: |
+        ls -la
+        ls -la ./bin
+        ls -la bin
     - name: Rename
       if: ${{ inputs.deploy }}
       run: mv ./bin/rediscompat.so \
