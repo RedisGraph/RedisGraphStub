@@ -8,23 +8,14 @@ on:
   workflow_dispatch:
 
 env:
-  UBUNTU_IMAGES: '["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]'
   UBUNTU_DEPS: 'apt update && apt install make gcc build-essential python3 python3-pip curl -y'
-
-  YUM_FLAVORS: |
-    - os: "centos:centos7"
-      osnick: "centos7"
-    - os: "amazonlinux:2"
-      osnick: "amazonlinux"
-    - os: "rockylinux:8"
-      osnick: "rockylinux"
   YUM_DEPS: 'yum install make gcc tar gzip curl python3 python3-devel -y'
 
 jobs:
   ubuntu-build:
     strategy:
       matrix:
-        os: ${{ toJson(github.env.UBUNTU_IMAGES) }}
+        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
     uses: ./.github/workflows/common-container.yml
     with:
       container: ${{ matrix.os }}
@@ -34,7 +25,7 @@ jobs:
   ubuntu-build-arm:
     strategy:
       matrix:
-        os: ${{ toJson(github.env.UBUNTU_IMAGES) }}
+        os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
     uses: ./.github/workflows/self-hosted-arm.yml
     with:
       container: ${{ matrix.os }}
@@ -46,7 +37,12 @@ jobs:
     strategy:
       matrix:
         include:
-          ${{ toJson(github.env.YUM_FLAVORS) }}
+          - os: "centos:centos7"
+            osnick: "centos7"
+          - os: "amazonlinux:2"
+            osnick: "amazonlinux"
+          - os: "rockylinux:8"
+            osnick: "rockylinux"
     uses: ./.github/workflows/common-container.yml
     with:
       container: ${{ matrix.os }}
@@ -56,7 +52,13 @@ jobs:
   yum-flavors-arm:
     strategy:
       matrix:
-        os: ${{ toJson(github.env.YUM_FLAVORS) }}
+        include:
+          - os: "centos:centos7"
+            osnick: "centos7"
+          - os: "amazonlinux:2"
+            osnick: "amazonlinux"
+          - os: "rockylinux:8"
+            osnick: "rockylinux"
     uses: ./.github/workflows/self-hosted-arm.yml
     with:
       container: ${{ matrix.os }}
