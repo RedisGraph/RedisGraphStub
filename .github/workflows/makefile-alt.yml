@@ -1,8 +1,6 @@
 name: Publish
 
 on:
-  pull_request: # TEMP
-    branches: [ "main" ]
   push:
     branches: [ "main" ]
   workflow_dispatch:
@@ -11,7 +9,6 @@ on:
 jobs:
   ubuntu-build:
     strategy:
-      fail-fast: false  # TEMP
       matrix:
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
     secrets: inherit
@@ -23,7 +20,6 @@ jobs:
 
   ubuntu-build-arm:
     strategy:
-      fail-fast: false  # TEMP
       matrix:
         os: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:22.04", "debian:bullseye"]
     secrets: inherit
@@ -35,7 +31,6 @@ jobs:
 
   yum-flavors:
     strategy:
-      fail-fast: false  # TEMP
       matrix:
         include:
           - os: "centos:centos7"
@@ -53,7 +48,6 @@ jobs:
 
   yum-flavors-arm:
     strategy:
-      fail-fast: false  # TEMP
       matrix:
         include:
           - os: "centos:centos7"
