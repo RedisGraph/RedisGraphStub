@@ -6,6 +6,8 @@ on:
       runner:
         required: true
         type: string
+      os-nickname:
+        type: string
       REDIS_REF:
         type: string
         default: '7.2'
@@ -49,22 +51,23 @@ jobs:
       run: make
     - name: test
       run: RLTest --module bin/rediscompat.so
-    # - name: Rename
-    #   if: ${{ inputs.deploy }}
-    #   run: mv ./bin/rediscompat.so ${{format('{0}.{1}-{2}.{3}', './bin/rediscompat', steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
-    # - name: Upload artifact
-    #   if: ${{ inputs.deploy }}
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: RedisStackStub
-    #     path: ./bin
-    #     retention-days: 1
-    # - name: Upload S3
-    #   if: ${{ inputs.deploy }}
-    #   uses: shallwefootball/s3-upload-action@master
-    #   with:
-    #     aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
-    #     aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
-    #     aws_bucket: 'redismodules'
-    #     source_dir: ./bin
-    #     destination_dir: rediscompat
+    - name: Rename
+      if: ${{ inputs.deploy }}
+      run: mv ./bin/rediscompat.so \
+        ${{ format('{0}.{1}-{2}.{3}', './bin/rediscompat', inputs.os-nickname || steps.system-info.outputs.name, runner.arch, '1.0.0.so') }}
+    - name: Upload artifact
+      if: ${{ inputs.deploy }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: RedisStackStub
+        path: ./bin
+        retention-days: 1
+    - name: Upload S3
+      if: ${{ inputs.deploy }}
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.REDISLABSMODULES_ACCESS_KEY }}
+        aws_secret_access_key: ${{ secrets.REDISLABSMODULES_SECRET_ACCESS_KEY }}
+        aws_bucket: 'redismodules'
+        source_dir: ./bin
+        destination_dir: rediscompat

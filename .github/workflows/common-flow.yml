@@ -51,6 +51,7 @@ jobs:
     uses: ./.github/workflows/common-container.yml
     with:
       container: ${{ matrix.os }}
+      os-nickname: ${{ matrix.osnick }}
       deploy: ${{ inputs.deploy }}
       dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel -y'
 
@@ -69,6 +70,7 @@ jobs:
     uses: ./.github/workflows/self-hosted-arm.yml
     with:
       container: ${{ matrix.os }}
+      os-nickname: ${{ matrix.osnick }}
       deploy: ${{ inputs.deploy }}
       dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel -y'
 

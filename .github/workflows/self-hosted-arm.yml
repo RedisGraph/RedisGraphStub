@@ -6,6 +6,8 @@ on:
       container:
         required: true
         type: string
+      os-nickname:
+        type: string
       REDIS_REF:
         type: string
       deploy:
@@ -53,6 +55,7 @@ jobs:
       deploy: ${{ inputs.deploy }}
       runner: ${{ needs.start-runner.outputs.label }}
       container: ${{ inputs.container }}
+      os-nickname: ${{ inputs.os-nickname }}
 
   stop-runner:
     name: Stop self-hosted EC2 runner
