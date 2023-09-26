@@ -26,21 +26,33 @@ else
 fi
 echo $OS_NICK
 
-
-declare -A archs=(
-    ["x86_64"]="x86_64"
-    ["aarch64"]="arm64v8"
-    ["arm64v8"]="arm64v8"
-)
-
 # Get OS nick name
 if [[ $os = 'macos' ]]
-then
-    declare -A MACOS_OSNICKS=(
-        ["13"]="ventura"
-        ["12"]="monterey"
-    )
-    OS_NICK=${MACOS_OSNICKS[$OS_NICK]}
+# Since macos uses bash v3, we cannot use associative arrays
+    case $OS_NICK in
+        12)
+            OS_NICK="monterey"
+            ;;
+        13)
+            OS_NICK="ventura"
+            ;;
+        *)
+            echo "Unknown MacOS version $OS_NICK"
+            exit 1
+            ;;
+    esac
+    case $arch in
+        x86_64)
+            arch="x86_64"
+            ;;
+        aarch64)
+            arch="arm64v8"
+            ;;
+        *)
+            echo "Unknown MacOS architecture $arch"
+            exit 1
+            ;;
+    esac
 else
     declare -A LINUX_OSNICKS=(
         ["rocky_linux8.8"]="rhel8"
@@ -54,9 +66,6 @@ else
     OS_NICK=${LINUX_OSNICKS[$OS_NICK]}
 fi
 echo $OS_NICK
-
-# Get architecture
-arch=${archs[$arch]}
 echo $arch
 
 # Call zip and create the zip file
