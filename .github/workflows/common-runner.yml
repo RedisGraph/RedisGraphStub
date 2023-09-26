@@ -52,7 +52,7 @@ jobs:
     - name: test
       run: RLTest --module bin/rediscompat.so
     - name: Zip
-      if: ${{ inputs.deploy }}
+      # if: ${{ inputs.deploy }}
       run: ./zip.sh
     - name: Upload artifact
       if: ${{ inputs.deploy }}
