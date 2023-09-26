@@ -83,5 +83,5 @@ jobs:
     uses: ./.github/workflows/common-runner.yml
     with:
       runner: ${{ matrix.runners }}
-      python-setup: '3.10'
+      # python-setup: '3.10'
       deploy: ${{ inputs.deploy }}
