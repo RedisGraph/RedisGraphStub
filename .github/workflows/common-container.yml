@@ -55,14 +55,9 @@ jobs:
       run: make
     - name: test
       run: RLTest --module bin/rediscompat.so
-    - name: Rename
+    - name: Zip 
       if: ${{ inputs.deploy }}
-      run: mv ./bin/rediscompat.so
-        ${{ format('{0}.{1}-{2}.{3}.so',
-          './bin/rediscompat',
-          inputs.os-nickname || format('{0}-{1}', steps.system-info.outputs.name, steps.system-info.outputs.release),
-          runner.arch,
-          '1.0.0') }}
+      run: ./zip.sh
     - name: Upload artifact
       if: ${{ inputs.deploy }}
       uses: actions/upload-artifact@v3
