@@ -28,6 +28,7 @@ echo $OS_NICK
 
 # Get OS nick name
 if [[ $os = 'macos' ]]
+then
 # Since macos uses bash v3, we cannot use associative arrays
     case $OS_NICK in
         12)
