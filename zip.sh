@@ -5,6 +5,8 @@ version=1.0.0
 # Get OS name and architecture
 os=$(uname -s)
 arch=$(uname -m)
+echo $os
+echo $arch
 
 
 # Get OS nick name
