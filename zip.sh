@@ -49,6 +49,9 @@ then
         aarch64)
             arch="arm64v8"
             ;;
+        arm64)
+            arch="arm64v8"
+            ;;
         *)
             echo "Unknown MacOS architecture $arch"
             exit 1
