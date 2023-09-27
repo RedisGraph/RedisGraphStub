@@ -72,4 +72,3 @@ echo $arch
 # Call zip and create the zip file
 echo "Creating zip file ./bin/rediscompat-${os}-${OS_NICK}-${arch}.${version}.zip"
 zip -j ./bin/rediscompat-${os}-${OS_NICK}-${arch}.${version}.zip ./bin/rediscompat.so
-rm ./bin/rediscompat.so
