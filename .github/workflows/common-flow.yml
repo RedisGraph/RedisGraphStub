@@ -78,10 +78,23 @@ jobs:
     strategy:
       fail-fast: ${{ inputs.fast-fail }}
       matrix:
-        runners: [macos-12, monterey]
+        runners: [macos-12]
     secrets: inherit
     uses: ./.github/workflows/common-runner.yml
     with:
       runner: ${{ matrix.runners }}
       # python-setup: '3.10'
       deploy: ${{ inputs.deploy }}
+  
+  apple-silicon-build:
+    strategy:
+      fail-fast: ${{ inputs.fast-fail }}
+      matrix:
+        runners: [monterey]
+    secrets: inherit
+    uses: ./.github/workflows/common-runner.yml
+    with:
+      runner: ${{ matrix.runners }}
+      # python-setup: '3.10'
+      deploy: ${{ inputs.deploy }}
+      sudo: 'sudo'

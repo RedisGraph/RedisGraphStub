@@ -18,6 +18,9 @@ on:
         type: string
       python-setup:
         type: string
+      sudo:
+        type: string
+        default: ''
 
 
 jobs:
@@ -46,7 +49,7 @@ jobs:
       run: pip3 install -r requirments.txt
     - name: Install Redis Server
       working-directory: redis
-      run: make -j `nproc` install
+      run: ${{ inputs.sudo }} make -j `nproc` install
     - name: Make
       run: make
     - name: test
