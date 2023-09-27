@@ -22,7 +22,7 @@ jobs:
     with:
       container: ${{ matrix.os }}
       deploy: ${{ inputs.deploy }}
-      dependencies_command: 'apt update && apt install make gcc build-essential python3 python3-pip curl -y'
+      dependencies_command: 'apt update && apt install make gcc build-essential python3 python3-pip curl zip -y'
 
   ubuntu-build-arm:
     strategy:
@@ -34,7 +34,7 @@ jobs:
     with:
       container: ${{ matrix.os }}
       deploy: ${{ inputs.deploy }}
-      dependencies_command: 'apt update && apt install make gcc build-essential python3 python3-pip curl -y'
+      dependencies_command: 'apt update && apt install make gcc build-essential python3 python3-pip curl zip -y'
 
   yum-flavors:
     strategy:
@@ -53,7 +53,7 @@ jobs:
       container: ${{ matrix.os }}
       os-nickname: ${{ matrix.osnick }}
       deploy: ${{ inputs.deploy }}
-      dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel -y'
+      dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel zip -y'
 
   yum-flavors-arm:
     strategy:
@@ -72,7 +72,7 @@ jobs:
       container: ${{ matrix.os }}
       os-nickname: ${{ matrix.osnick }}
       deploy: ${{ inputs.deploy }}
-      dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel -y'
+      dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel zip -y'
 
   mac-build:
     strategy:
@@ -83,5 +83,18 @@ jobs:
     uses: ./.github/workflows/common-runner.yml
     with:
       runner: ${{ matrix.runners }}
-      python-setup: '3.10'
+      # python-setup: '3.10'
       deploy: ${{ inputs.deploy }}
+  
+  apple-silicon-build:
+    strategy:
+      fail-fast: ${{ inputs.fast-fail }}
+      matrix:
+        runners: [monterey]
+    secrets: inherit
+    uses: ./.github/workflows/common-runner.yml
+    with:
+      runner: ${{ matrix.runners }}
+      # python-setup: '3.10'
+      deploy: ${{ inputs.deploy }}
+      sudo: 'sudo'
