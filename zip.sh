@@ -71,6 +71,7 @@ else
 
     declare -A archs=(
         ["x86_64"]="x86_64"
+        ["X86_64"]="x86_64"
         ["aarch64"]="arm64v8"
         ["arm64"]="arm64v8"
         ["ARM64"]="arm64v8"
