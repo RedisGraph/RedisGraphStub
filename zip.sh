@@ -65,7 +65,7 @@ else
         ["ubuntu20.04"]="ubuntu20.04"
         ["ubuntu22.04"]="ubuntu22.04"
         ["amazon_linux2"]="amzn2"
-        ["debian_gnu/linux11"]="bullseye"
+        ["debian_gnu/linux11"]="Debian-11.7"
     )
     OS_NICK=${LINUX_OSNICKS[$OS_NICK]}
 
