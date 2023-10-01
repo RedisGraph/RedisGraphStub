@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script adds the file ./bin/rediscompat.so to the zip file with the pattern rediscompt-<Linux|macos>-<osnick>-<arch>.version.zip
+# This script adds the file ./bin/rediscompat.so to the zip file with the pattern rediscompt.<Linux|macos>-<osnick>-<arch>.version.zip
 version=1.0.0
 # Get OS name and architecture
 os=$(uname -s)
@@ -82,5 +82,5 @@ echo $OS_NICK
 echo $arch
 
 # Call zip and create the zip file
-echo "Creating zip file ./bin/rediscompat-${os}-${OS_NICK}-${arch}.${version}.zip"
-zip -j ./bin/rediscompat-${os}-${OS_NICK}-${arch}.${version}.zip ./bin/rediscompat.so
+echo "Creating zip file ./bin/rediscompat.${os}-${OS_NICK}-${arch}.${version}.zip"
+zip -j ./bin/rediscompat.${os}-${OS_NICK}-${arch}.${version}.zip ./bin/rediscompat.so
