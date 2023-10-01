@@ -68,6 +68,15 @@ else
         ["debian_gnu/linux11"]="bullseye"
     )
     OS_NICK=${LINUX_OSNICKS[$OS_NICK]}
+
+    declare -A archs=(
+        ["x86_64"]="x86_64"
+        ["X86_64"]="x86_64"
+        ["aarch64"]="arm64v8"
+        ["arm64"]="arm64v8"
+        ["ARM64"]="arm64v8"
+    )
+    arch=${archs[$arch]}
 fi
 echo $OS_NICK
 echo $arch
