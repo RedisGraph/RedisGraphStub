@@ -65,7 +65,7 @@ else
         ["debian_gnu/linux11"]="bullseye"
     )
     OS_NICK=${LINUX_OSNICKS[$OS_NICK]}
-    [[ $OS_NICK == 'monterey' ]] && OS_NICK='catalina'
+    [[ $OS_NICK == 'monterey' ]] && OS_NICK='catalina'  # To be aligned with other modules in redis-stack
     declare -A archs=(
         ["x86_64"]="x86_64"
         ["X86_64"]="x86_64"
