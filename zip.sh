@@ -68,7 +68,7 @@ else
     [[ $OS_NICK == 'monterey' ]] && OS_NICK='catalina'  # To be aligned with other modules in redis-stack
     declare -A archs=(
         ["x86_64"]="x86_64"
-        ["X86_64"]="x86_64"
+        ["aarch64"]="aarch64"
         ["arm64v8"]="aarch64"
         ["arm64"]="aarch64"
         ["ARM64"]="aarch64"
