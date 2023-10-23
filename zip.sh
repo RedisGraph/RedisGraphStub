@@ -46,11 +46,8 @@ then
         x86_64)
             arch="x86_64"
             ;;
-        aarch64)
-            arch="arm64v8"
-            ;;
         arm64)
-            arch="arm64v8"
+            arch="aarch64"
             ;;
         *)
             echo "Unknown MacOS architecture $arch"
@@ -68,13 +65,13 @@ else
         ["debian_gnu/linux11"]="bullseye"
     )
     OS_NICK=${LINUX_OSNICKS[$OS_NICK]}
-
+    [[ $OS_NICK == 'monterey' ]] && OS_NICK='catalina'  # To be aligned with other modules in redis-stack
     declare -A archs=(
         ["x86_64"]="x86_64"
         ["X86_64"]="x86_64"
-        ["aarch64"]="arm64v8"
-        ["arm64"]="arm64v8"
-        ["ARM64"]="arm64v8"
+        ["arm64v8"]="aarch64"
+        ["arm64"]="aarch64"
+        ["ARM64"]="aarch64"
     )
     arch=${archs[$arch]}
 fi
