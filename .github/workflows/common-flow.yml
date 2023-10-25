@@ -46,7 +46,9 @@ jobs:
           - os: "amazonlinux:2"
             osnick: "amazonlinux"
           - os: "rockylinux:8"
-            osnick: "rockylinux"
+            osnick: "rockylinux8"
+          - os: "rockylinux:9"
+            osnick: "rockylinux9"
     secrets: inherit
     uses: ./.github/workflows/common-container.yml
     with:
@@ -65,7 +67,7 @@ jobs:
           - os: "amazonlinux:2"
             osnick: "amazonlinux"
           - os: "rockylinux:8"
-            osnick: "rockylinux"
+            osnick: "rockylinux8"
     secrets: inherit
     uses: ./.github/workflows/self-hosted-arm.yml
     with:

@@ -55,6 +55,7 @@ then
             ;;
     esac
 else
+    echo ${OS_NICK}
     declare -A LINUX_OSNICKS=(
         ["rocky_linux8.8"]="rhel8"
         ["centos_linux7"]="rhel7"
