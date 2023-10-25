@@ -59,7 +59,7 @@ jobs:
       # if: ${{ inputs.deploy }}
       run: ./zip.sh
     - name: Upload artifact
-      if: ${{ inputs.deploy }}
+#      if: ${{ inputs.deploy }}
       uses: actions/upload-artifact@v3
       with:
         name: RedisStackStub

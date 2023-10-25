@@ -46,14 +46,16 @@ jobs:
           - os: "amazonlinux:2"
             osnick: "amazonlinux"
           - os: "rockylinux:8"
-            osnick: "rockylinux"
+            osnick: "rockylinux8"
+          - os: "rockylinux:9"
+            osnick: "rockylinux9"
     secrets: inherit
     uses: ./.github/workflows/common-container.yml
     with:
       container: ${{ matrix.os }}
       os-nickname: ${{ matrix.osnick }}
       deploy: ${{ inputs.deploy }}
-      dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel zip -y'
+      dependencies_command: 'yum install make gcc tar gzip python3 python3-devel zip -y'
 
   yum-flavors-arm:
     strategy:
@@ -65,7 +67,7 @@ jobs:
           - os: "amazonlinux:2"
             osnick: "amazonlinux"
           - os: "rockylinux:8"
-            osnick: "rockylinux"
+            osnick: "rockylinux8"
     secrets: inherit
     uses: ./.github/workflows/self-hosted-arm.yml
     with:
