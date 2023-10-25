@@ -55,7 +55,7 @@ jobs:
       container: ${{ matrix.os }}
       os-nickname: ${{ matrix.osnick }}
       deploy: ${{ inputs.deploy }}
-      dependencies_command: 'yum install make gcc tar gzip curl python3 python3-devel zip -y'
+      dependencies_command: 'yum install make gcc tar gzip python3 python3-devel zip -y'
 
   yum-flavors-arm:
     strategy:
